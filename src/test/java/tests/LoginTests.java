@@ -10,38 +10,33 @@ public class LoginTests extends BaseTest {
     @Test(description = "Validate presence of UI elements on login page")
     public void testPresenceOfElements() {
         LoginPage lp = new LoginPage(driver);
-        Assert.assertTrue(lp.isLoaded(), "❌ Login page did not load.");
-        Assert.assertTrue(lp.areCoreElementsPresent(), "❌ Core elements (email, password, login, eye) are missing.");
+        Assert.assertTrue(lp.isLoaded(), "Login page did not load.");
+        Assert.assertTrue(lp.areCoreElementsPresent(), "Core elements (email, password, login, eye) are missing.");
         Assert.assertTrue(lp.getPageTitle().toLowerCase().contains("janitri") || lp.getPageTitle().length() > 0,
-                "❌ Title not visible or incorrect.");
+                "Title not visible or incorrect.");
     }
 
     @Test(description = "Click login with blank fields and verify error message")
     public void testLoginWithBlankFields() {
         LoginPage lp = new LoginPage(driver);
 
-        // Directly try logging in without entering anything
         lp.clickLogin();
 
         String errorMsg = lp.getErrorTextIfAny();
-        System.out.println("⚠️ Blank fields error: " + errorMsg);
+        System.out.println("Blank fields error: " + errorMsg);
 
-        // Validate that some error message is shown
-        Assert.assertTrue(!errorMsg.isBlank(), "❌ Expected an error message when trying to login with blank fields.");
+        Assert.assertTrue(!errorMsg.isBlank(), "Expected an error message when trying to login with blank fields.");
     }
 
     @Test(description = "Password masking toggle works")
     public void testPasswordMaskedbutton() {
         LoginPage lp = new LoginPage(driver);
 
-        // Initially password should be masked
         Assert.assertTrue(lp.isPasswordMasked(), "❌ Password should be masked by default.");
 
-        // Toggle password visibility
         lp.togglePasswordVisibility();
         Assert.assertFalse(lp.isPasswordMasked(), "❌ Password should become visible after first toggle.");
 
-        // Toggle again to hide password
         lp.togglePasswordVisibility();
         Assert.assertTrue(lp.isPasswordMasked(), "❌ Password should be masked again after second toggle.");
     }
@@ -50,16 +45,13 @@ public class LoginTests extends BaseTest {
     public void testInvalidLoginShowErrorMsg() {
         LoginPage lp = new LoginPage(driver);
 
-        // Enter fake credentials
         lp.enterEmail("random_user@example.com");
         lp.enterPassword("WrongPass123!");
         lp.clickLogin();
 
-        // Capture the error message
         String err = lp.getErrorTextIfAny();
         System.out.println("⚠️ Captured invalid login error: " + err);
 
-        // Verify that an error is displayed
         Assert.assertTrue(!err.isBlank(),
                 "❌ Expected an error message for invalid credentials, but none was found.");
     }
