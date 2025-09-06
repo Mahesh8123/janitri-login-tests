@@ -18,7 +18,6 @@ public class BaseTest {
     public void setUp() {
         WebDriverManager.chromedriver().setup();
 
-        // ✅ Configure Chrome options
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-infobars");
         options.addArguments("--start-maximized");
@@ -27,22 +26,19 @@ public class BaseTest {
         options.addArguments("--remote-allow-origins=*");
         options.addArguments("--disable-popup-blocking");
 
-        // ✅ Automatically allow notifications using prefs
         Map<String, Object> prefs = new HashMap<>();
         Map<String, Object> profile = new HashMap<>();
         Map<String, Object> contentSettings = new HashMap<>();
-        contentSettings.put("notifications", 1); // 1 = allow, 2 = block
+        contentSettings.put("notifications", 1); 
         profile.put("default_content_setting_values", contentSettings);
         prefs.put("profile", profile);
         options.setExperimentalOption("prefs", prefs);
 
         driver = new ChromeDriver(options);
 
-        // ✅ Set timeouts
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
 
-        // ✅ Use Chrome DevTools Protocol to auto-grant notifications
         try {
             Map<String, Object> params = new HashMap<>();
             params.put("origin", BASE_URL);
@@ -52,7 +48,6 @@ public class BaseTest {
             System.out.println("⚠️ CDP grantPermissions not supported, falling back to prefs.");
         }
 
-        // ✅ Navigate to base URL
         driver.get(BASE_URL);
     }
 
